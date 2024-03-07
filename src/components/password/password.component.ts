@@ -20,8 +20,16 @@ import { borderColor } from "src/models/enums";
   imports: [ReactiveFormsModule],
 })
 export class PasswordComponent implements OnInit, OnDestroy {
-  password = new FormControl("", [Validators.minLength(8)]);
+  //form control for password field
+  password = new FormControl("", [
+    Validators.required,
+    Validators.minLength(8),
+  ]);
+
+  //helper for unsubscribing all subscriptions
   unSubscriber = new Subscription();
+
+  // border color bars
   bar0!: borderColor;
   bar1!: borderColor;
   bar2!: borderColor;
