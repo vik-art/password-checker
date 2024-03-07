@@ -1,6 +1,15 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormControl, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Subscription } from "rxjs";
+import {
+  digits,
+  letters,
+  lettersAndNumbers,
+  lettersAndSymbols,
+  lettersDigitsSymbols,
+  symbols,
+  symbolsAndNumbers,
+} from "src/models/constants";
 import { borderColor } from "src/models/enums";
 
 @Component({
@@ -13,32 +22,33 @@ import { borderColor } from "src/models/enums";
 export class PasswordComponent implements OnInit, OnDestroy {
   password = new FormControl("", [Validators.minLength(8)]);
   unSubscriber = new Subscription();
-  bar0 = "";
-  bar1 = "";
-  bar2 = "";
+  bar0!: borderColor;
+  bar1!: borderColor;
+  bar2!: borderColor;
 
   ngOnInit(): void {
     this.unSubscriber.add(
       this.password.valueChanges.subscribe((val) => {
         if (!val) {
-          this.bar0 = borderColor.GRAY;
-          this.bar1 = borderColor.GRAY;
-          this.bar2 = borderColor.GRAY;
+          this.setDefaultColors();
           return;
         }
-        this.checkPasswordStrength(val);
+        this.password.invalid
+          ? this.setBorderErrorColor()
+          : this.checkPasswordStrength(val);
       })
     );
   }
 
   checkPasswordStrength(value: string) {
-    const lettersOnly = /\p{L}+/u.test(value);
-    const numbersOnly = /\d/.test(value);
-    const symbolsOnly = /[!-\/:-@[-`{-~]/.test(value);
-    const lettersNumbers = /(?=.*\d)(?=.*[a-z])/.test(value);
-    const lettersSymbols = /(?=.*\d)((?=.*\W)|(?=.*_))^[^ ]+$/.test(value);
-    const symbolsNumbers = /(?=.*[a-z])((?=.*\W)|(?=.*_))^[^ ]+$/.test(value);
-    const valid = /(?=.*\d)(?=.*[a-z])((?=.*\W)|(?=.*_))^[^ ]+$/.test(value);
+    this.setDefaultColors();
+    const lettersOnly = letters.test(value);
+    const numbersOnly = digits.test(value);
+    const symbolsOnly = symbols.test(value);
+    const lettersNumbers = lettersAndNumbers.test(value);
+    const lettersSymbols = lettersAndSymbols.test(value);
+    const symbolsNumbers = symbolsAndNumbers.test(value);
+    const valid = lettersDigitsSymbols.test(value);
     if (lettersOnly || numbersOnly || symbolsOnly) {
       this.bar0 = borderColor.RED;
     }
@@ -53,6 +63,18 @@ export class PasswordComponent implements OnInit, OnDestroy {
       this.bar1 = borderColor.GREEN;
       this.bar2 = borderColor.GREEN;
     }
+  }
+
+  setBorderErrorColor() {
+    this.bar0 = borderColor.RED;
+    this.bar1 = borderColor.RED;
+    this.bar2 = borderColor.RED;
+  }
+
+  setDefaultColors() {
+    this.bar0 = borderColor.GRAY;
+    this.bar1 = borderColor.GRAY;
+    this.bar2 = borderColor.GRAY;
   }
 
   ngOnDestroy(): void {
