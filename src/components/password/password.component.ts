@@ -62,8 +62,8 @@ export class PasswordComponent implements OnInit, OnDestroy {
     }
 
     if (lettersNumbers || lettersSymbols || symbolsNumbers) {
-      this.bar0 = borderColor.ORANGE;
-      this.bar1 = borderColor.ORANGE;
+      this.bar0 = borderColor.YELLOW;
+      this.bar1 = borderColor.YELLOW;
     }
 
     if (valid) {

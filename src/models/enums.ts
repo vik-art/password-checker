@@ -1,6 +1,6 @@
 export enum borderColor {
     RED = 'red',
-    ORANGE = 'orange',
+    YELLOW = 'yellow',
     GREEN = 'green',
     GRAY = 'gray'
 }
